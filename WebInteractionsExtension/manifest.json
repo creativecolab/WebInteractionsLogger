@@ -1,0 +1,30 @@
+{
+  "name": "Web Interaction Logger",
+  "description": "Looking at how people use web queries when they take notes",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_title": "Click to start logging"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["sendToServer.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "/background.js"
+  },
+  "host_permissions": ["*://*/*"],
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "webNavigation",
+    "identity",
+    "identity.email",
+    "webRequest",
+    "storage",
+    "debugger",
+    "scripting"
+  ]
+}
