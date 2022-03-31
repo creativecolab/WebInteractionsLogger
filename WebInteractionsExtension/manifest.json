@@ -4,12 +4,17 @@
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_title": "Click to start logging"
+    "default_title": "Click to start logging",
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": ["sendToServer.js"]
+    },
+    {
+      "matches": ["https://docs.google.com/document/d/*/*"],
+      "js": ["detectActivity.js"]
     }
   ],
   "background": {
@@ -17,6 +22,7 @@
   },
   "host_permissions": ["*://*/*"],
   "permissions": [
+    "notifications",
     "activeTab",
     "tabs",
     "webNavigation",
@@ -25,6 +31,7 @@
     "webRequest",
     "storage",
     "debugger",
-    "scripting"
+    "scripting",
+    "pageCapture"
   ]
 }

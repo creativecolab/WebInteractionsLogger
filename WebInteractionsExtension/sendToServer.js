@@ -7,12 +7,13 @@ chrome.runtime.onMessage.addListener(async function (
   timestamp = new Date().toLocaleString("en-US");
   if (/^https?\:\/\/www\.google\.com\/search\?q\=[^\&]+/.test(request.url)) {
     dom = document.getElementById("main").innerHTML;
-    console.log(dom);
-    await sendResponse({ url: request.url, timestamp: timestamp, dom: dom });
+    docTitle = document.title;
+    await sendResponse({ url: request.url, timestamp: timestamp, dom: dom , docTitle: docTitle});
     
     return true;
   } else{
-    await sendResponse({ url: request.url, timestamp: timestamp, dom: null });
+    docTitle = document.title;
+    await sendResponse({ url: request.url, timestamp: timestamp, dom: null , docTitle: docTitle });
     return true
   }
 });
