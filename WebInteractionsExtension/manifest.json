@@ -11,10 +11,6 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": ["sendToServer.js"]
-    },
-    {
-      "matches": ["https://docs.google.com/document/d/*/*"],
-      "js": ["detectActivity.js"]
     }
   ],
   "background": {

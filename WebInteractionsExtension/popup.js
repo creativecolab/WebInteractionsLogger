@@ -47,22 +47,17 @@ submitFormId.addEventListener("click", setDocId);
 function setDocId() {
   let docIdEle = document.getElementById("docId");
   let url = docIdEle.value;
-  chrome.storage.sync.set({ docId: url });
+  if (!url.includes("docs.google.com/document/d/")) {
+    chrome.storage.sync.set({ docId: url });
+  } else {
+    lastSlashIndex = url.lastIndexOf("/");
+    docIdIndex = url.lastIndexOf("/", lastSlashIndex - 1);
+    docIdstr = url.substring(docIdIndex + 1, lastSlashIndex);
+    console.log(docIdstr);
+    chrome.storage.sync.set({ docId: docIdstr });
+  }
   idOn.style.display = "block";
   docIdDiv.style.display = "none";
-  // if (!url.includes("docs.google.com/document/d/")) {
-  //   let errorText = document.getElementById("errorText");
-  //   errorText.innerText =
-  //     "Invalid URL, should contain docs.google.com/document/...";
-  // } else {
-  //   lastSlashIndex = url.lastIndexOf("/");
-  //   docIdIndex = url.lastIndexOf("/", lastSlashIndex - 1);
-  //   docIdstr = url.substring(docIdIndex + 1, lastSlashIndex);
-  //   console.log(docIdstr);
-  //   chrome.storage.sync.set({ docId: docIdstr });
-  //   idOn.style.display = "block";
-  //   docIdDiv.style.display = "none";
-  // }
   chrome.storage.sync.set({ loggingStatus: false });
 }
 

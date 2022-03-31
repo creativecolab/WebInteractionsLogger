@@ -109,8 +109,12 @@
             item.times.push({starting_time: timestamp, display: "circle" ,id: i+ '_node'});
             data[idx] = item;
           }
-
-          let row = createTableRow(value.timestamp, value.docTitle)
+          let row;
+          if(value.docTitle==undefined){
+            row = createTableRow(value.timestamp, url)
+          }else{
+            row = createTableRow(value.timestamp, value.docTitle)
+          }
           row.id = i
           historyTable.append(row)
         }
