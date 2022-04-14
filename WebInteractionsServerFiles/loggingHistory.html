@@ -34,11 +34,7 @@
         var nodeDict = {}
         let historyTable = document.getElementById('historyTable')
 
-        function getQueryFromUrl(url){
-          let query = ''
-          return query
-        }
-
+        //Remove data from server using remove button in table
         function removeRowFromDatabase(evt){
           let elm = evt.currentTarget
           let dbEntry = elm.parentNode.parentNode
@@ -69,6 +65,7 @@
 
         }
 
+        //Initialize table rows 
         function createTableRow(time, docTitle){
           let row = document.createElement("tr")
           let timeCell=document.createElement("td")
@@ -87,6 +84,7 @@
           return row
         }
 
+        //Retrieve web logging history and instantiate tables and timelines
         async function getWebLoggingHistory(docId) {
           let dest = "https://creativesearch.ucsd.edu/getHistory?docId=" + docId;
           let response = await fetch(dest);
@@ -98,13 +96,9 @@
           let url;
           let dates={}
 
-          // timelines.forEach(t => data.append({label: 'Queries ' + t[0], times:[]}))
-          // console.log(data)
-
           for (let i in history) {
             let value = history[i];
             let url = value.url.toString();
-            nodeDict[i]=url
             let timestamp = new Date(value.timestamp) ;
             let month = timestamp.getMonth() + 1
             let day = timestamp.getDate()
@@ -121,13 +115,14 @@
             let row;
             if(value.docTitle==undefined){
               row = createTableRow(value.timestamp, url)
+              nodeDict[i]=url
             }else{
               row = createTableRow(value.timestamp, value.docTitle)
+              nodeDict[i]=value.docTitle
             }
             row.id = i
             historyTable.append(row)
           }
-          console.log(dates)
           for (const property in dates) {
             console.log(property)
             data.push({label: property, times: dates[property]})
@@ -192,11 +187,6 @@
       //   ending= Math.floor(endingDate)
       //   ending = 1355780000000
         let data = await getWebLoggingHistory(docId); //Test docId: docId=13RN9L5_xIHH6a7ThkTOKWmuJKfTU7QIWU4k-Cm2-GwQ
-
-        console.log(data)
-       
-          
-        
     </script>
     <table id="historyTable">
       <tr>

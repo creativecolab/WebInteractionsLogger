@@ -1,7 +1,6 @@
 let toggle = document.getElementById("toggleLogging");
 toggle.addEventListener("click", setLoggingState);
-// Will clicking toggle button open google doc? Or will user open google doc first then click button?
-//Need to discuss sequence of user events with Srishti
+// Clicking on toggle button will open up study document if not already open and begins logging web history to server.
 async function setLoggingState() {
   chrome.storage.sync.get(["loggingStatus"], async (response) => {
     if (response.loggingStatus == false) {
@@ -13,9 +12,17 @@ async function setLoggingState() {
         tab["url"].includes(docId.docId)
       );
       if (docTab.length == 0) {
-        let tabId = await chrome.tabs.create({
-          url: docId.docId,
-        });
+        let tabId;
+        if (docId.docId.includes('http')){
+          tabId = await chrome.tabs.create({
+            url: docId.docId,
+          });
+        }else{
+          tabId = await chrome.tabs.create({
+            url: 'https://docs.google.com/document/d/' + docId.docId,
+          });
+        }
+        
 
         chrome.storage.sync.set({ docTabId: tabId.id });
         chrome.storage.sync.set({docWindowId: tabId.windowId})
@@ -31,17 +38,10 @@ async function setLoggingState() {
   });
 }
 
-// let enableAuto = document.getElementById("checkbox");
-// enableAuto.addEventListener("click", setAutoLogging);
-// function setAutoLogging() {
-//   if (enableAuto.checked) {
-//     chrome.storage.sync.set({ loggingStatus: true });
-//   }
-// }
-
 var docIdDiv = document.getElementById("docIdDiv");
 var idOn = document.getElementById("idOn");
 
+// Saves docId/study doc URL after inputted by user.
 let submitFormId = document.getElementById("submitDocId");
 submitFormId.addEventListener("click", setDocId);
 function setDocId() {
@@ -63,6 +63,7 @@ function setDocId() {
 
 let reset = document.getElementById("resetId");
 reset.addEventListener("click", resetDocId);
+//Resets docId
 function resetDocId() {
   chrome.storage.sync.set({ docId: null });
   idOn.style.display = "none";
@@ -72,6 +73,8 @@ function resetDocId() {
 
 let downloadBut = document.getElementById("downloadHistory");
 downloadBut.addEventListener("click", downloadHistory);
+
+//Downloads web logging history associated with docId from server
 async function downloadHistory() {
   downloadBut.innerText = "Downloading...";
   let docId = await chrome.storage.sync.get(["docId"]);
@@ -95,6 +98,7 @@ async function downloadHistory() {
   downloadBut.innerText = "Download";
 }
 
+//Internal function used within downloadHistory
 function download(filename, text) {
   let pom = document.createElement("a");
   pom.setAttribute(
@@ -108,6 +112,8 @@ function download(filename, text) {
 
 let webLogBtn = document.getElementById("webLogBtn");
 webLogBtn.addEventListener("click", openWebLogPage);
+
+//Opens web logging history page with table and timelines
 async function openWebLogPage(){
   let docId = await chrome.storage.sync.get(['docId'])
   window.open("https://creativesearch.ucsd.edu/loggingHistory?docId=" + docId.docId.replaceAll(/https?:\/\//g, '').replaceAll('/', '_').replaceAll('.', '_'));

@@ -1,3 +1,5 @@
+// After retrieving message from background.js, get tab's webpage information
+// and sends it back to background.js to send to server.
 chrome.runtime.onMessage.addListener(async function (
   request,
   sender,

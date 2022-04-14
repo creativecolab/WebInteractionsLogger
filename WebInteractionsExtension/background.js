@@ -9,24 +9,11 @@ chrome.tabs.onUpdated.addListener(checkTab);
 chrome.tabs.onRemoved.addListener(removedTab);
 chrome.storage.onChanged.addListener(updateStorage);
 chrome.tabs.onActivated.addListener(isDocActive);
-// chrome.windows.onRemoved.addListener(async (windowId)=>{
-//   let docWindowId = await chrome.storage.sync.get(["docWindowId"])
-//   console.log(docWindowId.docWindowId + ' ' + windowId)
-//   if (windowId == docWindowId.docWindowId){
-//     clearInterval(nIntervId);
-//     nIntervId = null;
-//     intervCnt = 0;
-//     chrome.storage.sync.set({ loggingStatus: false })
-//     chrome.storage.sync.set({ docTabId: null });
-//     chrome.storage.sync.set({docWindowId: null})
-//   }
-// })
 
+//Checks if study doc is on the active tab, starts timer for inactivity if not
 async function isDocActive(activeInfo) {
   let loggingStatus = await chrome.storage.sync.get(["loggingStatus"])
   let docTabId = await chrome.storage.sync.get(["docTabId"])
-  // console.log(loggingStatus)
-  // console.log('Tab activated!')
   if (loggingStatus.loggingStatus == false) {
     clearInterval(nIntervId);
     nIntervId = null;
@@ -46,6 +33,7 @@ async function isDocActive(activeInfo) {
   return false
 }
 
+//Displays notification that web logging is turned off once 20 minutes passes
 async function displayNotif(docTabId) {
   let window =await chrome.windows.getLastFocused();
   let queryOptions = { active: true, windowId: window.id};
@@ -69,17 +57,16 @@ async function displayNotif(docTabId) {
       });
     }
   }
-  
   return;
 }
 
+//Changes extension icon when loggingStatus is changed and docId local variable when docId storage variable is changed
 function updateStorage() {
   chrome.storage.sync.get(["docId"], (response) => {
     if (response.docId != undefined) {
       docId = response.docId;
     }
   });
-
   chrome.storage.sync.get(["loggingStatus"], (response) => {
     if (response.loggingStatus == true) {
       chrome.action.setBadgeText({ text: "ON" });
@@ -94,6 +81,7 @@ function updateStorage() {
   });
 }
 
+//If study doc tab is removed, turns off web logging
 async function removedTab(tabId, removeInfo) {
   let docTabId = await chrome.storage.sync.get(["docTabId"])
   if (docTabId.docTabId == tabId) {
@@ -109,6 +97,7 @@ async function removedTab(tabId, removeInfo) {
   return;
 }
 
+//Checks if tab is valid for web logging
 async function checkTab(tabId, changeInfo, tab) {
   let loggingStatus = await chrome.storage.sync.get(["loggingStatus"])
   // console.log('Tab updated!')
@@ -126,6 +115,7 @@ async function checkTab(tabId, changeInfo, tab) {
   sendMessage(tabId, changeInfo.url);
 }
 
+//Send message to tab to retrieve webpage info, then send webpage info to server
 async function sendMessage(tabId, url) {
   chrome.tabs.sendMessage(
     tabId,
