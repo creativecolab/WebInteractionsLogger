@@ -3,14 +3,16 @@ toggle.addEventListener("click", setLoggingState);
 // Clicking on toggle button will open up study document if not already open and begins logging web history to server.
 async function setLoggingState() {
   chrome.storage.sync.get(["loggingStatus"], async (response) => {
+    console.log(response)
     if (response.loggingStatus == false) {
       chrome.storage.sync.set({ loggingStatus: true });
       toggle.value = "on";
       docId = await chrome.storage.sync.get(["docId"]);
       let tabs = await chrome.tabs.query({});
       docTab = tabs.filter((tab) =>
-        tab["url"].includes(docId.docId)
+        tab["url"].includes(docId.docId) && !tab["url"].includes('creativesearch.ucsd.edu')
       );
+      console.log(tabs)
       if (docTab.length == 0) {
         let tabId;
         if (docId.docId.includes('http')){
@@ -23,7 +25,6 @@ async function setLoggingState() {
           });
         }
         
-
         chrome.storage.sync.set({ docTabId: tabId.id });
         chrome.storage.sync.set({docWindowId: tabId.windowId})
       } else {
