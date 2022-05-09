@@ -1,6 +1,5 @@
-var authToken = "";
+import { SERVER_URL } from './settings.js';
 var docId = "";
-var userId = "";
 updateStorage()
 var nIntervId;
 var intervCnt = 0;
@@ -10,7 +9,10 @@ chrome.tabs.onRemoved.addListener(removedTab);
 chrome.storage.onChanged.addListener(updateStorage);
 chrome.tabs.onActivated.addListener(isDocActive);
 
-//Checks if study doc is on the active tab, starts timer for inactivity if not
+/**
+ * Checks if study doc is on the active tab, starts timer for inactivity if not
+ * @param  {object} activeInfo contains tabId and windowId of new activated window
+ */
 async function isDocActive(activeInfo) {
   let loggingStatus = await chrome.storage.sync.get(["loggingStatus"])
   let docTabId = await chrome.storage.sync.get(["docTabId"])
@@ -20,7 +22,7 @@ async function isDocActive(activeInfo) {
     intervCnt = 0;
     return false;
   }
-  activeTabId = activeInfo.tabId;
+  let activeTabId = activeInfo.tabId;
   if (activeTabId == docTabId.docTabId) {
     clearInterval(nIntervId);
     nIntervId = null;
@@ -33,7 +35,10 @@ async function isDocActive(activeInfo) {
   return false
 }
 
-//Displays notification that web logging is turned off once 20 minutes passes
+/**
+ * Displays notification that web logging is turned off once 20 minutes passes
+ * @param  {object} docTabId - tabId of tracked document
+ */
 async function displayNotif(docTabId) {
   let window =await chrome.windows.getLastFocused();
   let queryOptions = { active: true, windowId: window.id};
@@ -60,7 +65,9 @@ async function displayNotif(docTabId) {
   return;
 }
 
-//Changes extension icon when loggingStatus is changed and docId local variable when docId storage variable is changed
+/**
+ * Changes extension icon when loggingStatus is changed and docId local variable when docId storage variable is changed
+ */
 function updateStorage() {
   chrome.storage.sync.get(["docId"], (response) => {
     if (response.docId != undefined) {
@@ -74,14 +81,19 @@ function updateStorage() {
     } else if (response.loggingStatus == false) {
       clearInterval(nIntervId);
       nIntervId = null;
-      intervCount = 0;
+      intervCnt = 0;
       chrome.action.setBadgeText({ text: "OFF" });
       chrome.action.setBadgeBackgroundColor({ color: "#000000" });
     }
   });
 }
 
-//If study doc tab is removed, turns off web logging
+//
+/**
+ * turns off web logging if study doc tab is removed
+ * @param  {int} tabId - tabId of the removed tab
+ * @param  {object} removeInfo contains isWindowClosing boolean and windowId int
+ */
 async function removedTab(tabId, removeInfo) {
   let docTabId = await chrome.storage.sync.get(["docTabId"])
   if (docTabId.docTabId == tabId) {
@@ -97,7 +109,12 @@ async function removedTab(tabId, removeInfo) {
   return;
 }
 
-//Checks if tab is valid for web logging
+/**
+ * Checks if tab is valid for web logging
+ * @param  {int} tabId - tabId of updated tab
+ * @param  {object} changeInfo - object containing tabId's changed state
+ * @param  {object} tab - updated tab as an object
+ */
 async function checkTab(tabId, changeInfo, tab) {
   let loggingStatus = await chrome.storage.sync.get(["loggingStatus"])
   // console.log('Tab updated!')
@@ -115,7 +132,11 @@ async function checkTab(tabId, changeInfo, tab) {
   sendMessage(tabId, changeInfo.url);
 }
 
-//Send message to tab to retrieve webpage info, then send webpage info to server
+/**
+ * Send message to tab to retrieve webpage info, then send webpage info to server
+ * @param  {int} tabId - ID of updated tab
+ * @param  {string} url - url of updated tab
+ */
 async function sendMessage(tabId, url) {
   chrome.tabs.sendMessage(
     tabId,
@@ -123,9 +144,7 @@ async function sendMessage(tabId, url) {
       url: url,
     },
     (response) => {
-      console.log(response)
-      console.log(docId)
-      i = 0;
+      let i = 0;
       if (
         chrome.runtime.lastError != undefined &&
         chrome.runtime.lastError.message ==
@@ -139,7 +158,7 @@ async function sendMessage(tabId, url) {
         setTimeout(sendMessage, 1000, tabId, url);
         return;
       } else {
-        dest = "https://creativesearch.ucsd.edu/sendPage";
+        let dest = SERVER_URL + "/sendPage";
         fetch(dest, {
           // Declare what type of data we're sending
           headers: {

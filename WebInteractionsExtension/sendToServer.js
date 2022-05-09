@@ -1,5 +1,7 @@
-// After retrieving message from background.js, get tab's webpage information
-// and sends it back to background.js to send to server.
+/**
+ * Retrieves message from chrome extension's background.js, retrieves URL info, 
+ * then sends it back to chrome extension to be sent to server
+ */
 chrome.runtime.onMessage.addListener(async function (
   request,
   sender,
