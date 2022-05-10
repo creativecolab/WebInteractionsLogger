@@ -23,4 +23,4 @@ To guarantee you could still use our extension even after our current server shu
 - background.js - Transfers information between sendToServer.js and runs data through the server
 - settings.js - Stores the SERVER_URL if others wish to run this extension through their own server
 - loggingHistory.html, loggingHistory.html, d3-timelines.js, d3-tip.js - Webpage where users can view their web history that the extension logged in tabular and timeline format
-- serviceAccountKey.json - Credentials allowing server to access and save data to Firebase server
+- serviceAccountKey.json - Credentials allowing server to access and save data to Firebase database
