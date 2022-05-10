@@ -2,22 +2,12 @@ import eventlet
 
 eventlet.monkey_patch()
 import logging
-import random
 import re
-import string
 import urllib.request
-from datetime import datetime
-from typing import Text
 import firebase_admin
-from bs4 import BeautifulSoup
 from firebase_admin import credentials, db
 from flask import Flask, jsonify, render_template, request, send_file
 from flask_cors import CORS, cross_origin
-from flask_socketio import SocketIO, emit, join_room, leave_room, send
-from gensim.models import Word2Vec
-from sklearn.cluster import KMeans
-from sklearn.datasets import make_blobs
-from textblob import TextBlob, Word
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})

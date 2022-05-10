@@ -21,6 +21,9 @@ To guarantee you could still use our extension even after our current server shu
 
 The below steps are from following these setup guides: [1](https://blog.miguelgrinberg.com/post/running-a-flask-application-as-a-service-with-systemd) and [2](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04)
 
+- Create a Python virtual environment and install libraries imported into webLogger.py using pip
+- Install gunicorn and flask using pip
+- Move the [WebInteractionServerFiles](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsServerFiles) folder into the same directory
 - Create a WSGI Entry Point within the same directory as webLogger.py
 - Create a .service file within the /etc/systemd/system/ directory that will allow Ubuntu’s init system to automatically start Gunicorn and serve the Flask application whenever the server boots
 - Configuring Nginx to proxy requests
