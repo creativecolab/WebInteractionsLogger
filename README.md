@@ -2,12 +2,6 @@
 
 For bug reporting or any issues you encounter in the code, please email srpalani@ucsd.edu and/or smzhu@ucsd.edu.
 
-## Code for Server
-
-The code is in the [ServerFiles](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsServerFiles) folder.
-
-To guarantee you could still use our extension even after our current server shuts down, we provide the code of our server and you could deploy it on your server. You could also use it separately as a way to get the overview of a corpus and what it lacks compared with the meta-data. After you deploy this code on your own server, please also change the SERVER_URL in [settings.js](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsExtension/settings.js) to the link to your own server.
-
 ## Chrome Extension Setup 
 - Clone the repo (or download and extract it)
 - Unzip WebInteractionsLogger.zip
@@ -28,7 +22,9 @@ The below steps are from following these setup guides: [1](https://blog.miguelgr
 - Create a .service file within the /etc/systemd/system/ directory that will allow Ubuntu’s init system to automatically start Gunicorn and serve the Flask application whenever the server boots
 - Configuring Nginx to proxy requests
 
-### Chrome Extension Development
+To guarantee you could still use our extension even after our current server shuts down, we provide the code of our server and you could deploy it on your server. You could also use it separately as a way to get the overview of a corpus and what it lacks compared with the meta-data. After you deploy this code on your own server, please also change the SERVER_URL in [settings.js](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsExtension/settings.js) to the link to your own server.
+
+## File descriptions
 - popup.html - The popup that users interact with when they click the extension button
 - setVisibility.js, popup.js - Changes popup.html webpage based on underlying data stored in Chrome extension
 - sendToServer.js - Processes message from background.js to retrieve webpage data and send it back to background.js
