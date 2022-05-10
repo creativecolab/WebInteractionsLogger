@@ -4,9 +4,9 @@ For bug reporting or any issues you encounter in the code, please email srpalani
 
 ## Code for Server
 
-The code is in the ![ServerFiles](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsServerFiles) folder.
+The code is in the [ServerFiles](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsServerFiles) folder.
 
-To guarantee you could still use our extension even after our current server shuts down, we provide the code of our server and you could deploy it on your server. You could also use it separately as a way to get the overview of a corpus and what it lacks compared with the meta-data. After you deploy this code on your own server, please also change the SERVER_URL in ![settings.js](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsExtension/settings.js) to the link to your own server.
+To guarantee you could still use our extension even after our current server shuts down, we provide the code of our server and you could deploy it on your server. You could also use it separately as a way to get the overview of a corpus and what it lacks compared with the meta-data. After you deploy this code on your own server, please also change the SERVER_URL in [settings.js](https://github.com/creativecolab/WebInteractionsLogger/tree/main/WebInteractionsExtension/settings.js) to the link to your own server.
 
 ## Chrome Extension Setup 
 - Clone the repo (or download and extract it)
@@ -15,6 +15,13 @@ To guarantee you could still use our extension even after our current server shu
 - Navigate to chrome://extensions (chrome can be replaced with your appropriate browser name) and toggle on developer mode (on the top right)
 - Drag and drop the unzipped folder into the tab
 - Access the extension by clicking the "Extensions" button in the toolbar of your browser
+
+## Server Setup
+- Create a WSGI Entry Point within the same directory as webLogger.py
+- Create a .service file within the /etc/systemd/system/ directory that will allow Ubuntu’s init system to automatically start Gunicorn and serve the Flask application whenever the server boots
+- Configuring Nginx to proxy requests
+The above steps are from following these setup guides: [1](https://blog.miguelgrinberg.com/post/running-a-flask-application-as-a-service-with-systemd) and [2](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-18-04#step-5-configuring-nginx-to-proxy-requests)
+** For reference, our current server was able to run with these specs: Ubuntu 20.04 OS, 2 CPU cores, 2GB RAM, 50GB storage.
 
 ### Chrome Extension Development
 - popup.html - The popup that users interact with when they click the extension button
