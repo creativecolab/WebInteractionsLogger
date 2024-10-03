@@ -1,4 +1,4 @@
-# Web Interactions Logger
+# Web ChronoLogger
 
 For bug reporting or any issues you encounter in the code, please email srpalani@ucsd.edu and/or smzhu@ucsd.edu.
 
